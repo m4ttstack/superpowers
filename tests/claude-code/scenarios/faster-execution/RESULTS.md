@@ -54,3 +54,9 @@ C1-C4 pass 3/3. C4: "Task 2: complete (group 2, commits a1b2c3d..e4f5a6b, review
 ### Task 7 (scenario D, D1-D4)
 
 D1-D4 pass 3/3: no implementer dispatches; one reviewer per group or lone task via task-reviewer-prompt.md (Group 7 light on the cheapest tier); the next disjoint unit starts during each review only once the unit before has its completion lines; Task 9 (no Files block) never overlaps; "Native-with-reviews cap is 3 rounds, not SDD's 5", then park for the final reviewer. Observation: reps expect the completion line to read "(group 2, ..., 1 parked)", which task-done's fixed line format does not write.
+
+### Task 8 (scenario E, E1-E2)
+
+E1-E2 pass 3/3: Subagent-driven (groups of up to three), Native with reviews, Native; each rep recommends one with a plan-specific reason.
+
+Repo fast checks after Task 8: skill-size, sdd-ledger-format, executing-plans scripts, sdd-helper-paths (after fix 6a46fb1), shell-lint, skill-layout all pass.
