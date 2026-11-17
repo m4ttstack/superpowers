@@ -17,7 +17,7 @@ Group 7: tasks 7,8 — src/format.ts
 Task 1: complete (commits 1111111..a1b2c3d, review clean)
 Group 2: dispatched, base a1b2c3d
 Group 2: implemented a1b2c3d..e4f5a6b
-Group 2: review full
+Group 2: review full (reviewer agent-r2)
 Ruling: Task 5 dispatched during Group 2's review — files disjoint — cost if wrong: rework of Task 5
 Task 5: dispatched, base e4f5a6b
 ```

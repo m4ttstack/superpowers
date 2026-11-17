@@ -47,8 +47,10 @@ Subagent (general-purpose):
     It's always OK to pause and clarify. Don't guess or make assumptions.
 
     Before each task's commit, run the tests that cover what that task
-    changed. Run the full suite once, after your last task's commit and
-    before you report, never after every edit.
+    changed. Run the full suite once, never after every edit: with one
+    brief, before you commit; with several, after your last task's commit
+    and before you report. A red full suite is not DONE: fix it, or report
+    DONE_WITH_CONCERNS or BLOCKED with the failing tests named.
 
     ## You Do Not Dispatch Subagents
 

@@ -53,8 +53,8 @@ brief(s), the report file, and the printed diff path.
 
 **Resume the reviewer that raised the findings,** in every round,
 rounds 4-5 included: it already holds the diff, the briefs, and its own
-findings, so send it the re-review prompt's body as a message. Record each
-reviewer's agent identity when you dispatch it. If your harness cannot send
+findings, so send it the re-review prompt's body as a message. Its agent
+id is on its review ledger line (task-groups.md, Ledger lines). If your harness cannot send
 another message to a finished subagent, dispatch a fresh re-reviewer with
 the template instead. The re-reviewer verdicts
 each finding ADDRESSED or NOT ADDRESSED and flags new breakage in the fix

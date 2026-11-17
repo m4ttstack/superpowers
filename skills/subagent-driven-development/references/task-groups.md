@@ -22,8 +22,8 @@ group like this:
 
 Three kinds of task always run alone, as a group of one:
 
-- a task that needs the most capable tier (Model Selection: design
-  judgment or broad codebase understanding);
+- a task that needs the most capable tier (Model Selection: architecture
+  and design tasks);
 - a task with no `**Files:**` block, or one whose paths you cannot pin down:
   you cannot prove what it shares, so it neither joins a group nor overlaps
   another;
@@ -35,8 +35,9 @@ two or more:
 
 `Group <G>: tasks <N>,<N+1>[,<N+2>] — <the shared file or interface>`
 
-Tasks running alone get no `Group` line and run exactly as the rest of this
-skill describes for a single task.
+Tasks running alone get no `Group` line. They run as the rest of this skill
+describes for a single task, plus the `Task <N>:` dispatched, implemented,
+and review lines in Ledger lines, which resuming needs.
 
 ## Running a group
 
@@ -47,17 +48,23 @@ A group moves through the task loop as one unit:
   combined brief.
 - **Implementer:** one dispatch for the whole group, on the highest tier any
   member would get alone. It works the tasks in order, each with its own
-  test cycle and at least one commit, and writes one report file with a
-  `## Task <N>` section per task.
+  test cycle and at least one commit, and writes one report file,
+  `group-<G>-report.md` in the workspace, with a `## Task <N>` section per
+  task.
 - **Review:** record BASE before the dispatch, build one review package over
   BASE..HEAD, and dispatch one task reviewer with every brief, the report,
   and the package. It returns a spec verdict per task and one quality
-  verdict for the group.
+  verdict for the group. Write the reviewer's agent id on its review ledger
+  line (Ledger lines): re-reviews resume it, and the ledger is what
+  survives compaction.
 - **Fix loop:** the group is the unit (see fix-loop.md); every finding names
   the task it belongs to.
 - **Completion:** when the review is clean, or every open finding is parked
   at the cap, write one line per member task, together:
-  `Task <N>: complete (group <G>, commits <base7>..<head7>, review clean)`.
+  `Task <N>: complete (group <G>, commits <base7>..<head7>, review clean)`,
+  where the range is the group's `implemented` range. When overlap put
+  another unit's commits before a fix round, list each fix round's range
+  after it: `commits <base7>..<head7> + <fixbase7>..<fixhead7>`.
   A parked finding counts on the line of the task it names:
   `Task <N>: complete (group <G>, commits <base7>..<head7>, <K> parked)`.
   Never one combined line for the group: ledger readers count
@@ -87,6 +94,10 @@ other; its re-reviews are scoped re-reviews.
 - **The implementer finishes some tasks, then reports BLOCKED or
   NEEDS_CONTEXT on a later one:** review the finished tasks as a smaller
   group. Handle the stuck task per handling-reports.md, then run it alone.
+  The tasks after it wait for it, then are drawn again per Drawing groups.
+  Ledger the split: `Ruling: Group <G> split — <finished tasks> reviewed
+  as Group <G>, Task <N> alone, <later tasks> redrawn — <why> — cost if
+  wrong: one extra review seat`.
 - **The review passes some tasks and fails others:** the fix loop runs on
   the whole group, and every member's completion line waits for it. Fix
   loops almost always end in one round, so splitting the group is not worth
@@ -126,20 +137,21 @@ The limits:
 ## Ledger lines
 
 A group writes these lines, in this order, beside the single-task lines the
-rest of this skill describes. `<G>` is the group's first task number.
+rest of this skill describes. `<G>` is the group's first task's id.
 
 | When | Line |
 |---|---|
 | Pre-flight | `Group <G>: tasks <N>,<N+1>[,<N+2>] — <shared file or interface>` |
 | Implementer dispatched | `Group <G>: dispatched, base <base7>` |
 | Implementer reported DONE | `Group <G>: implemented <base7>..<head7>` |
-| Review dispatched | `Group <G>: review light` or `Group <G>: review full` |
+| Review dispatched | `Group <G>: review light (reviewer <agent id>)` or `Group <G>: review full (reviewer <agent id>)` |
 | Overlap dispatch | `Ruling: <G+1> dispatched during <G>'s review — files disjoint — cost if wrong: rework of <G+1>` |
-| Each fix round | `Group <G>: fix round <R>/5 (<X> addressed, <Y> open — Task <N>: <finding>; commits <a7>..<b7>)` |
+| Each fix round | `Group <G>: fix round <R>/5 (<X> addressed, <Y> open — Task <N>: <finding>; commits <a7>..<b7>)` (`/3` under executing-plans' Native with reviews) |
 | Clean, or parked at the cap | one `Task <N>: complete (group <G>, ...)` line per member task |
 
 Minor, parked, and ruling lines stay keyed `Task <N>:` and name the task
 the finding belongs to. A task running alone writes `Task <N>: dispatched,
-base <base7>` and `Task <N>: review light|full` and otherwise keeps the
+base <base7>`, `Task <N>: implemented <base7>..<head7>`, and `Task <N>:
+review light|full (reviewer <agent id>)`, and otherwise keeps the
 single-task lines. No `Group` line ever says `complete`: readers count
 `Task <N>: complete` lines and nothing else.

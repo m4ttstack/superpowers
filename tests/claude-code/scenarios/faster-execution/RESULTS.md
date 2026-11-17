@@ -73,3 +73,17 @@ Scenarios F, G and H were written for the final review's five Important findings
 | H1 Native with reviews ledgers dispatched + implemented lines (Important 1) | FAIL 2/3 ("No Group 2: dispatched ... or implemented ... line is written") | pass 3/3 | fixed |
 | H2 resume at Group 2's review, no redo | pass 3/3, with caveat "nothing on executing-plans' read path points to [the group resume rule]" | pass 3/3, via the new Resuming section | fixed |
 | H3 fix waits for G+1's last task (Important 5; question revised after the first pre-fix run) | FAIL 3/3 ("I start the fix after Task 3 ... before Task 4") | pass 3/3 ("finish Group 2 through Task 4's commit") | fixed |
+
+## Deferred-minor fix pass
+
+Scenario I covers the minors that change behavior. It ran against a snapshot of the text before this pass, then against the fix. The other minors are wording and consistency fixes, so one regression run each of A, B, C, D, F and H guards them.
+
+| Check | Pre-fix | Post-fix |
+|---|---|---|
+| I1 Minor deferred, ⚠️ via cannot-verify.md (Native with reviews) | pass 3/3, borrowed from SDD files ("group-reviews.md never says") | pass 3/3, cites group-reviews step 6 |
+| I2 no subagent tool: run as Native, say so | pass 3/3 by ruling ("No file decides this") | pass 3/3, cites "Without a subagent tool" |
+| I3 final fix-wave re-review is a fresh dispatch | FAIL 3/3 ("The final reviewer, resumed") | pass 3/3 |
+| I4 lone implementer runs the full suite before commit; red is never DONE | FAIL 3/3 ("after its commit") | pass 3/3 |
+| I5 partial group: split ruled and ledgered, later tasks redrawn | FAIL 1/3 (no ruling) | pass 3/3 |
+
+Regression runs after the pass (1 rep each): A1-A5, B1-B6, C1-C4, D1-D4, F1-F3, H1-H3 all pass. B now writes completion ranges as `a1b2c3d..e4f5a6b + <fixbase7>..<fixhead7>`.

@@ -36,37 +36,53 @@ Everything in SKILL.md still holds (ledger, briefs, TDD, `task-start`,
 4. **Dispatch one reviewer per group** with
    [../../subagent-driven-development/task-reviewer-prompt.md](../../subagent-driven-development/task-reviewer-prompt.md):
    every brief, your report file, and the package that
-   `../subagent-driven-development/scripts/review-package PLAN_FILE BASE HEAD`
+   `../../subagent-driven-development/scripts/review-package PLAN_FILE BASE HEAD`
    prints (run it by its absolute path, from the working tree you're
    executing in).
    Pick `[REVIEW_DEPTH]` and the tier per task-groups.md, Review depth.
-   Record the reviewer's agent identity. Ledger `Group <G>: review light|full`.
+   Ledger `Group <G>: review light|full (reviewer <agent id>)` (alone:
+   `Task <N>: review ...`); the id on that line is how you resume the
+   reviewer after compaction.
 5. **Keep working while it reviews,** one group ahead and no further: start
    the next group only if both it and the group under review have
-   `**Files:**` blocks with pinned paths and they share no file, and ledger `Ruling: <G+1> started during <G>'s review —
-   files disjoint — cost if wrong: rework of <G+1>`. Otherwise wait for the
-   verdict. Never start G+2 until every task in G has its completion line.
-6. **When findings come back,** you are the implementer: finish the group
-   you are on (through its last task's commit), so its review range stays
-   free of fix commits, then fix them, re-run the covering tests, and append a fix
-   report. Record FIX_BASE (HEAD) when you start the fix. Send the resumed
+   `**Files:**` blocks with pinned paths and they share no file, and ledger
+   `Ruling: <G+1> started during <G>'s review — files disjoint — cost if
+   wrong: rework of <G+1>`. Otherwise wait for the verdict. Never start G+2 until every task in G has its completion line.
+6. **When findings come back,** route them as
+   [../../subagent-driven-development/references/fix-loop.md](../../subagent-driven-development/references/fix-loop.md)
+   does before its loop starts: each Minor becomes `Task <N>: minor
+   (deferred): <one-liner>` and is never fixed here; a ⚠️ item goes through
+   [../../subagent-driven-development/references/cannot-verify.md](../../subagent-driven-development/references/cannot-verify.md);
+   spec ❌, Critical, Important, and confirmed ⚠️ gaps enter the loop. For
+   those, you are the implementer: finish the group you are on (through its
+   last task's commit), so its review range stays free of fix commits, then
+   fix them, re-run the covering tests, and append a fix report. Record FIX_BASE (HEAD) when you start the fix. Send the resumed
    reviewer the body of
    [../../subagent-driven-development/re-review-prompt.md](../../subagent-driven-development/re-review-prompt.md)
    with the fix package; a harness that cannot message a finished subagent
    dispatches a fresh re-reviewer. Ledger
-   `Group <G>: fix round <R>/3 (...)`.
+   `Group <G>: fix round <R>/3 (...)` (alone: `Task <N>: fix round ...`).
 7. **Three rounds at most.** If findings are still open after round 3, stop
    fixing: park each as `Task <N>: parked — <finding> — Ruling: <why it
    stands for now> — <cost if wrong>` and name it to the final reviewer.
    You never rule your own code acceptable before the cap, and the cap
    hands the call to the final review, not to you.
 8. **Complete the group** once the review is clean or every open finding
-   is parked: run `task-done` for each member task in order, with that
-   task's covering test command, so each gets its own `Task <N>: complete`
-   line (task-groups.md, Ledger lines).
+   is parked: run `task-done` for each member task in order, with the BASE
+   that task's `task-start` printed and its covering test command. Each
+   gets its own `Task <N>: complete (commits ..., tests: ...)` line in
+   `task-done`'s format; that line is the completion line, and parked
+   findings are counted by their `parked` lines, not on it.
 
 The final whole-branch review and its single fix pass run as SKILL.md
 describes, with the parked findings in front of the reviewer.
+
+## Without a subagent tool
+
+The per-group reviews cannot run. Execute as plain Native (SKILL.md, the
+self-review path for the final review), ledger `Ruling: Native with reviews
+ran as Native — no subagent tool — cost if wrong: no independent review
+until the end`, and say so in your final message.
 
 ## Resuming
 

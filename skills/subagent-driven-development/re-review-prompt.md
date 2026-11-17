@@ -7,7 +7,8 @@ new breakage. It is not a fresh review — the full review already happened.
 Normally you send it to the reviewer that raised the findings, resumed: send
 the prompt body below (from "You are re-reviewing") as a message, with the
 placeholders filled. Dispatch it as a fresh subagent only when your harness
-cannot message a finished subagent.
+cannot message a finished subagent. The final fix wave's re-review
+(references/final-review.md) is always a fresh dispatch.
 
 **Purpose:** Verify each finding from the previous review was addressed, and
 that the fix itself broke nothing.
