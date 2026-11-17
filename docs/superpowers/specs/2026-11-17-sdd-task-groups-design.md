@@ -339,6 +339,9 @@ run and final review, asking Matt before each external step:
 3. Push branch `sdd-task-groups` and tag `v7.0.2-groups.1` to the fork.
 4. Point `~/.claude/local-marketplaces/superpowers-pinned/.claude-plugin/marketplace.json`
    at the fork's URL and tag, then `/reload-plugins`.
+5. Update `~/.claude/rules/subagent-execution-default.md` so the standing
+   default is Native with reviews (Matt's call), with subagent-driven kept for
+   when he asks for it or a plan is long enough to compact mid-run.
 
 These are not SDD tasks: they are shared-remote side effects that stop a
 running plan.
