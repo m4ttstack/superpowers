@@ -9,3 +9,8 @@ one subagent per task. Compose ONE dispatch brief listing every file and
 its change, send the whole batch to a single subagent, and review its diff
 as one unit. Reserve one-dispatch-per-task for work that needs its own
 judgment, its own tests, or its own review surface.
+
+Batching is not grouping. Grouping (task-groups.md) joins up to three
+consecutive, related tasks of different shapes; batching joins any number
+of identical small edits. Either way, every batched or grouped task gets its
+own `Task <N>: complete` ledger line.

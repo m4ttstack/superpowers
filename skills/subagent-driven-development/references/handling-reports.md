@@ -13,3 +13,8 @@ Part of superpowers:subagent-driven-development.
 4. If the plan itself is wrong, rule on the correction, ledger it, and re-dispatch with the ruling carried in the dispatch
 
 **Never** ignore an escalation or force the same model to retry without changes. If the implementer said it's stuck, something needs to change.
+
+**A group report that stops partway** (the implementer finished some tasks,
+then hit BLOCKED or NEEDS_CONTEXT): the finished tasks go to review as a
+smaller group; handle the stuck task as above and run it alone afterward
+(task-groups.md, Partial outcomes).

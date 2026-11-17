@@ -34,3 +34,7 @@ Baseline passes on B and C show the v7.0.2 controller already reasons well about
 ### Task 2 (scenario A, A1-A3)
 
 A1 pass 3/3, A2 pass 3/3 (Task 9 "runs alone — no Files block means its overlap with other tasks cannot be proven"), A3 pass 3/3 (`Group 2: tasks 2,3,4 — src/cart.ts ...`, `Group 7: tasks 7,8 — src/format.ts ...` before dispatch). A5 still fails ("mid-tier (the floor for reviewers)"), as expected until Task 5.
+
+### Task 3 (scenario A, A4)
+
+A4 pass 3/3: "implementer | Tasks 2,3,4 (Group 2)" then "task reviewer | Tasks 2,3,4 (Group 2) | ... spec verdict per task + one quality verdict". A1-A3 still pass 3/3.

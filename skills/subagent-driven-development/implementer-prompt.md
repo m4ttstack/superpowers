@@ -12,8 +12,10 @@ Subagent (general-purpose):
 
     ## Task Description
 
-    Read your task brief first: [BRIEF_FILE]
-    It contains the full task text from the plan.
+    Read your task brief first: [BRIEF_FILES]
+    It contains the full task text from the plan. A group dispatch lists
+    two or three briefs, one per task: work them in that order, each with
+    its own test cycle and at least one commit of its own.
 
     ## Context
 
@@ -44,8 +46,9 @@ Subagent (general-purpose):
     **While you work:** If you encounter something unexpected or unclear, **ask questions**.
     It's always OK to pause and clarify. Don't guess or make assumptions.
 
-    While iterating, run the focused test for what you're changing; run the
-    full suite once before committing, not after every edit.
+    Before each task's commit, run the tests that cover what that task
+    changed. Run the full suite once, after your last task's commit and
+    before you report, never after every edit.
 
     ## You Do Not Dispatch Subagents
 
@@ -127,7 +130,8 @@ Subagent (general-purpose):
 
     ## Report Format
 
-    Write your full report to [REPORT_FILE]:
+    Write your full report to [REPORT_FILE], with one `## Task <N>`
+    section per task when you were given more than one brief:
     - What you implemented (or what you attempted, if blocked)
     - What you tested and test results
     - **TDD Evidence** (if TDD was required for this task):

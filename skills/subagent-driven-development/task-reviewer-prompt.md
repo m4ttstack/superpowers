@@ -20,7 +20,9 @@ Subagent (general-purpose):
 
     ## What Was Requested
 
-    Read the task brief: [BRIEF_FILE]
+    Read the task brief: [BRIEF_FILES]
+    A group review lists two or three briefs, one per task, and the diff
+    holds all of them. Judge spec compliance task by task.
 
     Global constraints from the spec/design that bind this task:
     [GLOBAL_CONSTRAINTS]
@@ -164,6 +166,8 @@ Subagent (general-purpose):
 
     - ✅ Spec compliant | ❌ Issues found: [what's missing/extra/misunderstood,
       with file:line references]
+      With several briefs, one line per task: `Spec (Task <N>): ✅` or
+      `Spec (Task <N>): ❌ <what>`; every finding below names its task.
     - ⚠️ Cannot verify from diff: [requirements you could not verify from the
       diff alone, and what the controller should check — report alongside the
       ✅/❌ verdict for everything you could verify]
@@ -189,7 +193,8 @@ Subagent (general-purpose):
 
 **Placeholders:**
 - `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection
-- `[BRIEF_FILE]` — REQUIRED: the task brief file (`bash scripts/task-brief PLAN N`,
+- `[BRIEF_FILES]` — REQUIRED: the task brief file, or every member's brief
+  in plan order for a group (`bash scripts/task-brief PLAN N`,
   run by its absolute path, from the working tree you're executing in,
   prints the path; same file the implementer worked from)
 - `[GLOBAL_CONSTRAINTS]` — the binding requirements copied verbatim from

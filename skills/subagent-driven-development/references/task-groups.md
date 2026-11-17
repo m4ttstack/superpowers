@@ -36,3 +36,38 @@ one ledger line per group of two or more:
 
 Tasks running alone get no `Group` line and run exactly as the rest of this
 skill describes for a single task.
+
+## Running a group
+
+A group moves through the task loop as one unit:
+
+- **Briefs:** run `task-brief` once per member task, as for a single task.
+  The dispatch's `[BRIEF_FILES]` lists every brief path in plan order; no
+  combined brief.
+- **Implementer:** one dispatch for the whole group, on the highest tier any
+  member would get alone. It works the tasks in order, each with its own
+  test cycle and at least one commit, and writes one report file with a
+  `## Task <N>` section per task.
+- **Review:** record BASE before the dispatch, build one review package over
+  BASE..HEAD, and dispatch one task reviewer with every brief, the report,
+  and the package. It returns a spec verdict per task and one quality
+  verdict for the group.
+- **Fix loop:** the group is the unit (see fix-loop.md); every finding names
+  the task it belongs to.
+- **Completion:** when the review is clean, or every open finding is parked
+  at the cap, write one line per member task, together:
+  `Task <N>: complete (group <G>, commits <base7>..<head7>, review clean)`.
+  A parked finding counts on the line of the task it names:
+  `Task <N>: complete (group <G>, commits <base7>..<head7>, <K> parked)`.
+  Never one combined line for the group: ledger readers count
+  `Task <N>: complete` lines.
+
+## Partial outcomes
+
+- **The implementer finishes some tasks, then reports BLOCKED or
+  NEEDS_CONTEXT on a later one:** review the finished tasks as a smaller
+  group. Handle the stuck task per handling-reports.md, then run it alone.
+- **The review passes some tasks and fails others:** the fix loop runs on
+  the whole group, and every member's completion line waits for it. Fix
+  loops almost always end in one round, so splitting the group is not worth
+  its bookkeeping.
