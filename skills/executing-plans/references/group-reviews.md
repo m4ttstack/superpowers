@@ -30,8 +30,10 @@ Everything in SKILL.md still holds (ledger, briefs, TDD, `task-start`,
    changed, the tests you ran with their output, and any concerns.
 4. **Dispatch one reviewer per group** with
    [../../subagent-driven-development/task-reviewer-prompt.md](../../subagent-driven-development/task-reviewer-prompt.md):
-   every brief, your report file, and the package from
-   `../subagent-driven-development/scripts/review-package PLAN_FILE BASE HEAD`.
+   every brief, your report file, and the package that
+   `../subagent-driven-development/scripts/review-package PLAN_FILE BASE HEAD`
+   prints (run it by its absolute path, from the working tree you're
+   executing in).
    Pick `[REVIEW_DEPTH]` and the tier per task-groups.md, Review depth.
    Record the reviewer's agent identity. Ledger `Group <G>: review light|full`.
 5. **Keep working while it reviews,** one group ahead and no further: start
