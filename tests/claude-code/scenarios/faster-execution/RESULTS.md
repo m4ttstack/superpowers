@@ -50,3 +50,7 @@ A5 pass 3/3: "task reviewer | 7,8 (Group 7) | cheapest | light"; every other rev
 ### Task 6 (scenario C, C1-C4)
 
 C1-C4 pass 3/3. C4: "Task 2: complete (group 2, commits a1b2c3d..e4f5a6b, review clean)" plus Tasks 3 and 4, "no combined Group 2: complete line". Every rep resumes Group 2 at review over a1b2c3d..e4f5a6b and Task 5 from its existing commit. `tests/sdd-ledger-format` RED (no sample) then GREEN.
+
+### Task 7 (scenario D, D1-D4)
+
+D1-D4 pass 3/3: no implementer dispatches; one reviewer per group or lone task via task-reviewer-prompt.md (Group 7 light on the cheapest tier); the next disjoint unit starts during each review only once the unit before has its completion lines; Task 9 (no Files block) never overlaps; "Native-with-reviews cap is 3 rounds, not SDD's 5", then park for the final reviewer. Observation: reps expect the completion line to read "(group 2, ..., 1 parked)", which task-done's fixed line format does not write.

@@ -52,6 +52,12 @@ those, stop and ask.
 - Tasks are mostly independent — the same precondition as
   superpowers:subagent-driven-development.
 
+**Native with reviews:** when your human partner chose this variant, read
+[references/group-reviews.md](references/group-reviews.md) before Task 1.
+You still implement every task here, and a fresh reviewer checks each group
+of related tasks along the way; that file says what it adds to this skill
+and where it overrides it (when `task-done` runs).
+
 A fully specified plan makes inline execution transcription plus testing:
 it runs well on a mid-tier session model, and the one place the most
 capable model earns its cost is the final review, which this skill
@@ -163,6 +169,9 @@ its row, and start Task 1. Each task's own text is checked when you read
 its brief, not here.
 
 ## The Task Loop
+
+In the Native with reviews variant, follow references/group-reviews.md at
+each group boundary.
 
 Everything you print, and every tool result, stays resident in your
 context for the rest of the session. Redirect long test output to a file
