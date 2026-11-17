@@ -1,8 +1,13 @@
 # Scoped Re-Review Prompt Template
 
-Use this template when dispatching a re-review after a fix round. The
+Use this template for the scoped re-review after a fix round. The
 re-reviewer verifies the findings were addressed and checks the fix diff for
 new breakage. It is not a fresh review — the full review already happened.
+
+Normally you send it to the reviewer that raised the findings, resumed: send
+the prompt body below (from "You are re-reviewing") as a message, with the
+placeholders filled. Dispatch it as a fresh subagent only when your harness
+cannot message a finished subagent.
 
 **Purpose:** Verify each finding from the previous review was addressed, and
 that the fix itself broke nothing.
@@ -19,7 +24,7 @@ Subagent (general-purpose):
 
     ## The Task
 
-    Read the task brief: [BRIEF_FILE]
+    Read the task brief: [BRIEF_FILES]
 
     ## The Findings Under Verification
 
@@ -30,7 +35,7 @@ Subagent (general-purpose):
     Read the implementer's report (fix reports are appended at the end):
     [REPORT_FILE]
 
-    **Fix base:** [FIX_BASE_SHA] (the head the previous review saw)
+    **Fix base:** [FIX_BASE_SHA] (HEAD when the fix was dispatched)
     **Head:** [HEAD_SHA]
     **Diff file:** [DIFF_FILE]
 
@@ -103,11 +108,11 @@ Subagent (general-purpose):
 **Placeholders:**
 - `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection; scoped
   re-reviews of small fix diffs take a cheap-to-mid tier
-- `[BRIEF_FILE]` — the task brief file (same file the implementer worked from)
+- `[BRIEF_FILES]` — the task brief file(s) the implementer worked from
 - `[FINDINGS]` — the Critical/Important findings and spec gaps from the
   previous review, copied verbatim, one per bullet
 - `[REPORT_FILE]` — the implementer's report file (fix reports appended)
-- `[FIX_BASE_SHA]` — the head the previous review saw
+- `[FIX_BASE_SHA]` — HEAD when the fix was dispatched (fix-loop.md)
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — the path `bash scripts/review-package PLAN_FILE FIX_BASE HEAD` printed
   (run by its absolute path, from the working tree you're executing in)

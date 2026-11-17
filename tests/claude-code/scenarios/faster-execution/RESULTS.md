@@ -38,3 +38,7 @@ A1 pass 3/3, A2 pass 3/3 (Task 9 "runs alone — no Files block means its overla
 ### Task 3 (scenario A, A4)
 
 A4 pass 3/3: "implementer | Tasks 2,3,4 (Group 2)" then "task reviewer | Tasks 2,3,4 (Group 2) | ... spec verdict per task + one quality verdict". A1-A3 still pass 3/3.
+
+### Task 4 (scenario B, B1-B6)
+
+B1-B6 pass 3/3. B4 now: "I resume the reviewer that raised the finding (an existing agent)" in every rep; B3: "FIX_BASE = git rev-parse HEAD at the moment I dispatch the fix ... never e4f5a6b". Observation: completion lines use a1b2c3d..<fixhead>, a range that also spans the overlapped task's commits.

@@ -71,3 +71,34 @@ A group moves through the task loop as one unit:
   the whole group, and every member's completion line waits for it. Fix
   loops almost always end in one round, so splitting the group is not worth
   its bookkeeping.
+
+## Overlap: one group ahead
+
+When group G's implementer reports DONE and you dispatch G's review, you
+may dispatch the next group's implementer (G+1, a group or a lone task) at
+once, if:
+
+- every file in G+1's `**Files:**` blocks is absent from G's, and
+- G+1 has a `**Files:**` block at all.
+
+Ledger it: `Ruling: <G+1> dispatched during <G>'s review — files disjoint —
+cost if wrong: rework of <G+1>`.
+
+The limits:
+
+- **One group ahead, no further.** G+2 never dispatches until every task in
+  G has its completion line.
+- **One implementer at a time.** A fix round for G waits until G+1's
+  implementer reports. Reviewers may overlap: G+1's review can run while
+  G's fix round runs.
+- **BASE and FIX_BASE are recorded at dispatch.** G+1's BASE is HEAD when
+  G+1 is dispatched. A fix round's FIX_BASE is HEAD when the fix is
+  dispatched (fix-loop.md), so G+1's commits never fall inside G's scoped
+  re-review.
+- **A fix that reaches into G+1's files** (the finding cannot be fixed
+  without them): rule on it and ledger the ruling before the fix round,
+  tell G's implementer what G+1 put in those files, and point G+1's review
+  or next fix round at the overlap.
+- **A finding G+1 built on** (an interface G+1 consumes changes): rule per
+  the fix loop's breaker guidance and carry the ruling into G+1's review or
+  next fix round.

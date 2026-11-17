@@ -231,6 +231,7 @@ and fix-round diffs need it.
 - Record the implementer's agent identity from the dispatch result —
   fix-loop rounds 1-3 resume this agent.
 - Never dispatch multiple implementation subagents in parallel (conflicts).
+  A reviewer may run beside one implementer (task-groups.md, Overlap).
 
 Template: [implementer-prompt.md](implementer-prompt.md)
 
@@ -313,8 +314,8 @@ message as your other bookkeeping:
   tripped breaker
 - a group writes one such line per member task (task-groups.md)
 
-Then mark the todo complete and move on. Never move to the next task while
-the review has open Critical/Important issues that are neither fixed nor
+Then mark the todo complete and move on. Never move past the one group
+overlap allows while the review has open Critical/Important issues that are neither fixed nor
 parked-with-ruling at the cap.
 
 ## Final Review

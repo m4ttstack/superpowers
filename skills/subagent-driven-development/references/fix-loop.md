@@ -18,7 +18,9 @@ Before the loop starts, two routes leave it immediately:
   the plan mandates it, and do not dispatch a fix that contradicts the plan
   without a recorded ruling.
 Everything else enters the loop. A fix round is one fix dispatch plus one
-scoped re-review. Five rounds maximum per task:
+scoped re-review. Five rounds maximum per task. A group is one unit here:
+one loop and one cap for the whole group, with every finding naming its
+task (task-groups.md):
 
 **Rounds 1-3 — resume the original implementer.** Send it the open findings
 verbatim. Its context is intact: it knows the task, the code, and its own
@@ -41,10 +43,20 @@ output; dispatch the re-review once all three are present. Name the
 covering test files in the fix message — a one-line fix does not need the
 whole suite.
 
-**The re-review is scoped.** Run `bash scripts/review-package PLAN_FILE FIX_BASE HEAD`
-by its absolute path, from the working tree you're executing in, where FIX_BASE is the head the previous review saw, and dispatch
+**The re-review is scoped.** Record FIX_BASE (`git rev-parse HEAD`) when
+you dispatch the fix, not when the review returned: under overlap another
+group's commits can land in between (task-groups.md). Run
+`bash scripts/review-package PLAN_FILE FIX_BASE HEAD` by its absolute path,
+from the working tree you're executing in, and send
 [re-review-prompt.md](../re-review-prompt.md) with the findings list, the
-brief, the report file, and the printed diff path. The re-reviewer verdicts
+brief(s), the report file, and the printed diff path.
+
+**Resume the reviewer that raised the findings,** in every round,
+rounds 4-5 included: it already holds the diff, the briefs, and its own
+findings, so send it the re-review prompt's body as a message. Record each
+reviewer's agent identity when you dispatch it. If your harness cannot send
+another message to a finished subagent, dispatch a fresh re-reviewer with
+the template instead. The re-reviewer verdicts
 each finding ADDRESSED or NOT ADDRESSED and flags new breakage in the fix
 diff only. New Critical/Important breakage in the fix diff joins the open
 findings list. Out-of-scope observations go to the ledger as deferred
@@ -52,6 +64,8 @@ minors — they never extend the loop.
 
 **After each round,** append to the ledger:
 `Task <N>: fix round <R>/5 (<X> addressed, <Y> open — <finding one-liners>; commits <a7>..<b7>)`
+(for a group: `Group <G>: fix round <R>/5 (...)`, each finding prefixed with
+its task)
 
 Never fix findings yourself in the controller session — your context stays
 clean for coordination, and controller fixes skip review.
