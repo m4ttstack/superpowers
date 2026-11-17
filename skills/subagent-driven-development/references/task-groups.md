@@ -62,6 +62,25 @@ A group moves through the task loop as one unit:
   Never one combined line for the group: ledger readers count
   `Task <N>: complete` lines.
 
+### Review depth
+
+Pick the depth when you dispatch the review, and ledger it beside the
+review: `Group <G>: review light|full` (a task running alone:
+`Task <N>: review light|full`).
+
+- **Light,** when the work is transcription: every member task's plan text
+  carries the complete code for every code step (the same signal that puts
+  its implementer on the cheapest tier), and the implementer reported DONE
+  with green tests. Dispatch the task reviewer with `[REVIEW_DEPTH]` set to
+  `light`, on the cheapest tier. It returns the spec verdict per task and
+  Critical findings only. A light review is one package read and a verdict,
+  so the mid-tier reviewer floor (Model Selection) does not apply.
+- **Full,** for everything else: today's review, `[REVIEW_DEPTH]` set to
+  `full`.
+
+A light review's spec ❌ or Critical finding enters the fix loop like any
+other; its re-reviews are scoped re-reviews.
+
 ## Partial outcomes
 
 - **The implementer finishes some tasks, then reports BLOCKED or

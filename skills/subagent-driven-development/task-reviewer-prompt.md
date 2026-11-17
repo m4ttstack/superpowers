@@ -116,6 +116,11 @@ Subagent (general-purpose):
 
     ## Part 2: Code Quality
 
+    Review depth: [REVIEW_DEPTH]. If it is `light`, report only Critical
+    quality issues (broken behavior, data loss, a security hole); leave
+    Important and Minor out, and set Task quality from Critical alone. If
+    it is `full`, apply everything below.
+
     **Code quality:**
     - Clean separation of concerns?
     - Proper error handling?
@@ -197,6 +202,8 @@ Subagent (general-purpose):
   in plan order for a group (`bash scripts/task-brief PLAN N`,
   run by its absolute path, from the working tree you're executing in,
   prints the path; same file the implementer worked from)
+- `[REVIEW_DEPTH]` — REQUIRED: `light` for transcription work, otherwise
+  `full` (references/task-groups.md, Review depth)
 - `[GLOBAL_CONSTRAINTS]` — the binding requirements copied verbatim from
   the plan's Global Constraints section or the spec: exact values, formats,
   and stated relationships between components (not process rules — those

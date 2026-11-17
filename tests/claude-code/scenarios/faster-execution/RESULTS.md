@@ -42,3 +42,7 @@ A4 pass 3/3: "implementer | Tasks 2,3,4 (Group 2)" then "task reviewer | Tasks 2
 ### Task 4 (scenario B, B1-B6)
 
 B1-B6 pass 3/3. B4 now: "I resume the reviewer that raised the finding (an existing agent)" in every rep; B3: "FIX_BASE = git rev-parse HEAD at the moment I dispatch the fix ... never e4f5a6b". Observation: completion lines use a1b2c3d..<fixhead>, a range that also spans the overlapped task's commits.
+
+### Task 5 (scenario A, A5)
+
+A5 pass 3/3: "task reviewer | 7,8 (Group 7) | cheapest | light"; every other reviewer "full". A1-A4 still pass 3/3.
