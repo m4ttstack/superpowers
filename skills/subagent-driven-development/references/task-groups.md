@@ -29,8 +29,9 @@ Three kinds of task always run alone, as a group of one:
   another;
 - a task that shares nothing with its neighbors.
 
-A group's id is its first task's number. Before dispatching Task 1, write
-one ledger line per group of two or more:
+A group's id is its first task's id (`2`, or `6a` for a group starting
+at Task 6a). Before dispatching Task 1, write one ledger line per group of
+two or more:
 
 `Group <G>: tasks <N>,<N+1>[,<N+2>] — <the shared file or interface>`
 
@@ -121,3 +122,24 @@ The limits:
 - **A finding G+1 built on** (an interface G+1 consumes changes): rule per
   the fix loop's breaker guidance and carry the ruling into G+1's review or
   next fix round.
+
+## Ledger lines
+
+A group writes these lines, in this order, beside the single-task lines the
+rest of this skill describes. `<G>` is the group's first task number.
+
+| When | Line |
+|---|---|
+| Pre-flight | `Group <G>: tasks <N>,<N+1>[,<N+2>] — <shared file or interface>` |
+| Implementer dispatched | `Group <G>: dispatched, base <base7>` |
+| Implementer reported DONE | `Group <G>: implemented <base7>..<head7>` |
+| Review dispatched | `Group <G>: review light` or `Group <G>: review full` |
+| Overlap dispatch | `Ruling: <G+1> dispatched during <G>'s review — files disjoint — cost if wrong: rework of <G+1>` |
+| Each fix round | `Group <G>: fix round <R>/5 (<X> addressed, <Y> open — Task <N>: <finding>; commits <a7>..<b7>)` |
+| Clean, or parked at the cap | one `Task <N>: complete (group <G>, ...)` line per member task |
+
+Minor, parked, and ruling lines stay keyed `Task <N>:` and name the task
+the finding belongs to. A task running alone writes `Task <N>: dispatched,
+base <base7>` and `Task <N>: review light|full` and otherwise keeps the
+single-task lines. No `Group` line ever says `complete`: readers count
+`Task <N>: complete` lines and nothing else.

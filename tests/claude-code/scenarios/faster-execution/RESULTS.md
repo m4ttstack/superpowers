@@ -46,3 +46,7 @@ B1-B6 pass 3/3. B4 now: "I resume the reviewer that raised the finding (an exist
 ### Task 5 (scenario A, A5)
 
 A5 pass 3/3: "task reviewer | 7,8 (Group 7) | cheapest | light"; every other reviewer "full". A1-A4 still pass 3/3.
+
+### Task 6 (scenario C, C1-C4)
+
+C1-C4 pass 3/3. C4: "Task 2: complete (group 2, commits a1b2c3d..e4f5a6b, review clean)" plus Tasks 3 and 4, "no combined Group 2: complete line". Every rep resumes Group 2 at review over a1b2c3d..e4f5a6b and Task 5 from its existing commit. `tests/sdd-ledger-format` RED (no sample) then GREEN.
