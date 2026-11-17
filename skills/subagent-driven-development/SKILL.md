@@ -134,8 +134,9 @@ against it. A plan with no reachable spec gets a ledger note saying so —
 rulings made without one are provisional.
 
 Before dispatching Task 1, read [references/preflight.md](references/preflight.md)
-and run the conflict scan it describes. Its table and rulings go in the
-ledger.
+and run the conflict scan it describes, then draw task groups per
+[references/task-groups.md](references/task-groups.md). The table, rulings,
+and `Group` lines go in the ledger.
 
 ## Model Selection
 
@@ -169,16 +170,13 @@ When the task's plan text contains the complete code to write, the
 implementation is transcription plus testing: use the cheapest tier for
 that implementer. Single-file mechanical fixes also take the cheapest tier.
 
-**Task complexity signals (implementation tasks):**
-- Touches 1-2 files with a complete spec → cheap model
-- Touches multiple files with integration concerns → standard model
-- Requires design judgment or broad codebase understanding → most capable model
-
 ## The Task Loop
 
-**Small same-shape work:** when the plan lists several small edits of the
-same kind across files, read [references/batching.md](references/batching.md)
-before dispatching them.
+**Groups:** a group of related tasks is one unit for every step below:
+one dispatch, one review, one fix loop. Read
+[references/task-groups.md](references/task-groups.md) before dispatching,
+reviewing, or completing a group. Small same-shape edits:
+[references/batching.md](references/batching.md).
 
 Everything you paste into a dispatch prompt — and everything a subagent
 prints back — stays resident in your context for the rest of the session

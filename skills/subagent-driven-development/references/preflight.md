@@ -24,3 +24,8 @@ Rule on each conflict it surfaces — the spec is the binding authority, the
 plan is its argument — record the ruling beside its row, and dispatch
 Task 1. The review loop remains the net for conflicts that only emerge from
 implementation.
+
+The same table decides task groups. Once its rulings are in the ledger,
+draw groups from its shared-file and shared-interface rows per
+[task-groups.md](task-groups.md), and write each group's `Group` line
+before Task 1's dispatch.
