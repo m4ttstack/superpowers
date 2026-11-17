@@ -137,7 +137,8 @@ and the new one resumes from the same ledger.
   directory is never yours to read or write.
 - Check for this plan's ledger at `<workspace>/progress.md`. If its first
   line names your plan file, tasks with a `Task <N>: complete` line are
-  DONE — do not redo them; resume at the first task without one. Their
+  DONE — do not redo them; resume at the first task without one (Native
+  with reviews: references/group-reviews.md, Resuming). Their
   commits exist in git even when your context no longer remembers making
   them: after compaction, trust the ledger and `git log` over your own
   recollection. A ledger whose first line names a different plan file is

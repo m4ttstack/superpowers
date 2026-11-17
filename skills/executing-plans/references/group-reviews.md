@@ -23,11 +23,16 @@ Everything in SKILL.md still holds (ledger, briefs, TDD, `task-start`,
 2. **Work a group's tasks in order,** each with its own TDD cycle and
    commit, reading every step's output as SKILL.md says. Hold `task-done`
    until step 8: its completion line means reviewed, so it waits for the
-   review. Record the group's BASE before its first task.
+   review. Before the group's first task, ledger `Group <G>: dispatched,
+   base <HEAD7>` (a task alone: `Task <N>: dispatched, base <HEAD7>`), the
+   same line subagent-driven-development writes, so either executor can
+   resume this ledger.
 3. **After the group's last task,** run the full suite once, write a short
    report file in the workspace (`group-<G>-report.md`, or
    `task-<N>-report.md` alone): one `## Task <N>` section per task with what
-   changed, the tests you ran with their output, and any concerns.
+   changed, the tests you ran with their output, and any concerns. Ledger
+   `Group <G>: implemented <base7>..<head7>` (alone: `Task <N>:
+   implemented ...`).
 4. **Dispatch one reviewer per group** with
    [../../subagent-driven-development/task-reviewer-prompt.md](../../subagent-driven-development/task-reviewer-prompt.md):
    every brief, your report file, and the package that
@@ -37,12 +42,13 @@ Everything in SKILL.md still holds (ledger, briefs, TDD, `task-start`,
    Pick `[REVIEW_DEPTH]` and the tier per task-groups.md, Review depth.
    Record the reviewer's agent identity. Ledger `Group <G>: review light|full`.
 5. **Keep working while it reviews,** one group ahead and no further: start
-   the next group if its `**Files:**` blocks share no file with the group
-   under review, and ledger `Ruling: <G+1> started during <G>'s review —
+   the next group only if both it and the group under review have
+   `**Files:**` blocks with pinned paths and they share no file, and ledger `Ruling: <G+1> started during <G>'s review —
    files disjoint — cost if wrong: rework of <G+1>`. Otherwise wait for the
    verdict. Never start G+2 until every task in G has its completion line.
-6. **When findings come back,** you are the implementer: finish the task
-   you are on, then fix them, re-run the covering tests, and append a fix
+6. **When findings come back,** you are the implementer: finish the group
+   you are on (through its last task's commit), so its review range stays
+   free of fix commits, then fix them, re-run the covering tests, and append a fix
    report. Record FIX_BASE (HEAD) when you start the fix. Send the resumed
    reviewer the body of
    [../../subagent-driven-development/re-review-prompt.md](../../subagent-driven-development/re-review-prompt.md)
@@ -61,3 +67,14 @@ Everything in SKILL.md still holds (ledger, briefs, TDD, `task-start`,
 
 The final whole-branch review and its single fix pass run as SKILL.md
 describes, with the parked findings in front of the reviewer.
+
+## Resuming
+
+A task inside a group gets its completion line only after the group's
+review, so SKILL.md's "resume at the first task without a completion line"
+would redo committed work. Resume from the `Group` and `Task <N>:
+dispatched|implemented` lines instead, per
+[../../subagent-driven-development/references/resuming.md](../../subagent-driven-development/references/resuming.md):
+`dispatched` without `implemented` means you were mid-group (finish from the
+commits since its base); `implemented` without completion lines means
+resume at the review, or at the next fix round if one is ledgered.

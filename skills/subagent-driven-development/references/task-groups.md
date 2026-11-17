@@ -98,8 +98,8 @@ When group G's implementer reports DONE and you dispatch G's review, you
 may dispatch the next group's implementer (G+1, a group or a lone task) at
 once, if:
 
-- every file in G+1's `**Files:**` blocks is absent from G's, and
-- G+1 has a `**Files:**` block at all.
+- G and G+1 both have `**Files:**` blocks with pinned paths, and
+- no file appears in both.
 
 Ledger it: `Ruling: <G+1> dispatched during <G>'s review — files disjoint —
 cost if wrong: rework of <G+1>`.

@@ -60,3 +60,16 @@ D1-D4 pass 3/3: no implementer dispatches; one reviewer per group or lone task v
 E1-E2 pass 3/3: Subagent-driven (groups of up to three), Native with reviews, Native; each rep recommends one with a plan-specific reason.
 
 Repo fast checks after Task 8: skill-size, sdd-ledger-format, executing-plans scripts, sdd-helper-paths (after fix 6a46fb1), shell-lint, skill-layout all pass.
+
+## Final review fix pass
+
+Scenarios F, G and H were written for the final review's five Important findings and run against a snapshot of the pre-fix text, then (where it failed) against the fix.
+
+| Check | Pre-fix | Post-fix | Outcome |
+|---|---|---|---|
+| F1-F2 SDD overlaps Task 5 during Group 2's review, with the Ruling line (Important 3) | pass 3/3 | n/a | not reproduced; no fix |
+| F3 no overlap when G lacks a Files block (Important 4) | pass 3/3 ("only because Task 9 lists no files, and that proves nothing") | pass 3/3 via Scenario H runs' reasoning | text contradiction removed anyway |
+| G1-G2 resume checks live agents before re-dispatch (Important 2) | pass 3/3 | n/a | not reproduced; no fix |
+| H1 Native with reviews ledgers dispatched + implemented lines (Important 1) | FAIL 2/3 ("No Group 2: dispatched ... or implemented ... line is written") | pass 3/3 | fixed |
+| H2 resume at Group 2's review, no redo | pass 3/3, with caveat "nothing on executing-plans' read path points to [the group resume rule]" | pass 3/3, via the new Resuming section | fixed |
+| H3 fix waits for G+1's last task (Important 5; question revised after the first pre-fix run) | FAIL 3/3 ("I start the fix after Task 3 ... before Task 4") | pass 3/3 ("finish Group 2 through Task 4's commit") | fixed |
