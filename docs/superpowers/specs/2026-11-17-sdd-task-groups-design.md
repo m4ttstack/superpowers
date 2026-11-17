@@ -1,4 +1,11 @@
-# SDD Task Groups Design
+# Faster Plan Execution Design
+
+Two phases, one fork:
+
+- **Phase 1, subagent-driven-development (SDD):** task groups, one-ahead
+  overlap, resumed reviewers, review depth by risk, targeted tests.
+- **Phase 2, a new execution mode:** the session implements, a fresh
+  reviewer checks each group.
 
 ## Intent
 
@@ -15,19 +22,27 @@ Evidence from 24 SDD ledgers across Matt's repos (239 completed tasks):
 - About a third of reviews caught something real, including Critical spec
   misses. Reviews earn their place; their count is the cost.
 
-So the time sink is the per-task seat count, not fix loops. This change lets
-the controller run consecutive related tasks as one **group**: one
-implementer, one review over the group's diff. It also lets the next group's
-implementer start while the previous group's review runs, when their files do
-not overlap.
+So the time sink is cold starts: every fresh agent re-reads the codebase
+before doing useful work, and SDD spends at least two per task. Current
+models hold far more context and need fewer turns than the skill assumes.
+Independence matters for review; it matters much less for implementation.
+
+This change lets the controller run consecutive related tasks as one
+**group**: one implementer, one review over the group's diff. The next
+group's implementer may start while the previous group's review runs, when
+their files do not overlap. Re-reviews resume the reviewer instead of
+spawning a fresh one, transcription work gets a lighter review, and test
+runs scope to what changed. Phase 2 adds a mode that drops implementer
+subagents entirely and keeps the per-group reviews.
 
 ## Goals
 
 - Fewer agent seats per plan where tasks are related: a 3-task group costs 2
-  seats instead of 6.
-- Less wall-clock on long plans, from both grouping and overlap.
+  seats instead of 6; in Phase 2's mode, 1.
+- Less wall-clock on long plans, from grouping, overlap, cheaper reviews of
+  transcription work, and fewer full-suite runs.
 - Keep one independent review over every line of code before the final
-  review.
+  review, in every mode except today's native mode.
 
 ## Non-goals
 
@@ -36,6 +51,10 @@ not overlap.
 - Changing the fix loop's caps, the final whole-branch review, or the four
   stop conditions.
 - Parallel implementers. At most one implementer is active at a time.
+  Parallel worktrees for independent groups are a later, separate pass.
+- Thinner plans. writing-plans keeps its step detail; slimming it is a
+  separate pass.
+- Changing today's native mode (`executing-plans` with one final review).
 - An upstream PR to obra/superpowers. The fork branch can become one later.
 
 ## Anti-goals
@@ -81,6 +100,18 @@ Where to cut, considered separately:
 Grouping rule, considered: shared files + size cap (**picked**), risk only
 (groups can sprawl across unrelated code), fixed-size waves (pairs unrelated
 tasks, bundles risky with trivial).
+
+Further speedups, considered (Matt picked the first four):
+
+| Lever | Trade-off | Picked |
+|---|---|---|
+| Resume the reviewer for re-reviews | Cheap; the reviewer is less "fresh" on round 2+ | **Yes** |
+| Review depth by risk | Faster reviews of transcription work; relies on the final review as net | **Yes** |
+| Targeted tests, full suite once per group | Fewer suite runs; cross-task breakage surfaces at group end | **Yes** |
+| Session implements, fresh reviewer per group | Biggest seat cut; session context carries every task | **Yes, Phase 2** |
+| Thinner plans | Shorter planning; implementers decide more | Later |
+| Parallel worktrees for independent groups | Biggest wall-clock win on wide plans; merge cost, biggest change | Later |
+| Mid-tier floor for implementers | Fewer retry turns; higher token price | No |
 
 ## Decided design
 
@@ -189,6 +220,48 @@ under the cap.
   consumes), the controller rules per the fix loop's breaker guidance and
   carries the ruling into G+1's next fix round or review.
 
+### Resumed reviewers
+
+- A fix round's scoped re-review resumes the reviewer agent that raised the
+  findings: send it the fix package path and the re-review instructions
+  (`re-review-prompt.md`'s content). It already holds the diff, the briefs
+  and its own findings.
+- Record the reviewer's agent identity from its dispatch, as the implementer's
+  is recorded today.
+- This holds in rounds 4-5 too, when a fresh escalated implementer takes
+  over: the findings' author judges whether they are addressed.
+- A harness that cannot message a live subagent dispatches a fresh
+  re-reviewer, as today.
+
+### Review depth by risk (my call on the details)
+
+- A group is **transcription** when every member task's plan text carries
+  the complete code for every code step (the signal Model Selection already
+  uses for the cheapest implementer tier) and the implementer reports DONE
+  with green tests.
+- A transcription group gets a **light review**: the same task-reviewer
+  prompt and inputs, on the cheapest tier, returning the per-task spec
+  verdicts and Critical findings only. The mid-tier reviewer floor exists
+  because cheap models take more turns on multi-step work; a light review is
+  one package read and a verdict, so the floor does not apply.
+- Any spec ❌ or Critical from a light review enters the fix loop as usual;
+  its re-reviews are scoped re-reviews, as today.
+- Every other group gets today's full review.
+- Ledger the depth with the review: `Group <G>: review light` or
+  `Group <G>: review full`. A task running alone uses `Task <N>: review
+  light|full`.
+
+### Targeted tests
+
+- While working a task, the implementer runs only the tests covering what it
+  changed, before each commit.
+- The full suite runs once per group, after the last task's commit and
+  before the report. A task running alone is a group of one, so today's
+  "full suite once before committing" stays for it.
+- The final whole-branch review keeps its full-suite run.
+- `implementer-prompt.md`'s "run the full suite once before committing"
+  becomes the per-group rule.
+
 ### Files to change
 
 - `skills/subagent-driven-development/SKILL.md`: core principle, process
@@ -199,16 +272,61 @@ under the cap.
 - `references/resuming.md`: a group whose member tasks are not all complete
   resumes as a group; a ledgered group line binds the resume.
 - `references/fix-loop.md`: group as the unit; FIX_BASE recorded at fix
-  dispatch.
+  dispatch; re-reviews resume the reviewer.
+- `re-review-prompt.md`: usable as a follow-up message to a resumed
+  reviewer as well as a fresh dispatch.
+- Model Selection in `SKILL.md`: the light-review exception to the mid-tier
+  reviewer floor.
 - `references/task-groups.md` (new): drawing groups, running them, overlap,
   ledger lines, partial outcomes.
 - `references/handling-reports.md`: the partial-group sentence.
 - `references/batching.md`: one line distinguishing it from grouping, and
   per-task completion lines.
-- `implementer-prompt.md`, `task-reviewer-prompt.md`: multiple briefs,
-  per-task sections and verdicts.
+- `implementer-prompt.md`: multiple briefs, per-task report sections,
+  targeted tests per task and the full suite once per group.
+- `task-reviewer-prompt.md`: multiple briefs, per-task spec verdicts, and
+  the light-review variant (spec verdicts and Critical only).
 - `skills/writing-plans/SKILL.md`: the execution-handoff blurb for
   Subagent-driven ("a fresh subagent implements each task") mentions groups.
+
+## Phase 2: session implements, fresh reviewers check
+
+A third execution mode beside Subagent-driven and Native. The session works
+every task itself, as Native does, and dispatches a fresh reviewer per group,
+as SDD does. It cuts every implementer cold start and keeps the independent
+per-group review.
+
+### Decided
+
+- Lives in `executing-plans` as a variant chosen at the plan handoff, not a
+  new skill: Native already owns the session-implements loop, the shared
+  ledger and workspace, `task-start` and `task-done`. `executing-plans`'
+  `SKILL.md` is 18,364 bytes, so the variant's rules go in a new
+  `skills/executing-plans/references/group-reviews.md` with a short pointer.
+- Groups are drawn exactly as Phase 1 draws them, after the pre-flight scan,
+  and ledgered the same way.
+- After each group's last commit and full-suite run, the session writes a
+  short report file (per-task sections: what changed, tests run, concerns)
+  and dispatches SDD's `task-reviewer-prompt.md` with the briefs, that report
+  and the review package. Review depth by risk applies.
+- **Overlap:** while group G's reviewer runs, the session may start group
+  G+1 if their files do not overlap. One group ahead, as in Phase 1.
+- **Fix loop:** the session fixes findings itself (it is the implementer) and
+  the resumed reviewer re-reviews. Three rounds maximum. Findings still open
+  after round 3 are parked with a ruling and pointed out to the final review;
+  the session never adjudicates its own code below that cap.
+- Completion lines per task, `Group <G>:` lines, and resume rules match
+  Phase 1, so a plan can switch executors mid-flight.
+- The final whole-branch review stays on the most capable tier.
+- `writing-plans`' handoff offers three options. My draft wording for the
+  new one: "**Native with reviews:** I implement every task myself, and a
+  fresh reviewer checks each group of related tasks before I move past it,
+  then one whole-branch review at the end. Fast, with an independent check
+  along the way."
+
+### Left to the builder (Phase 2)
+
+- Which option the handoff recommends in which situations.
 
 ### Shipping (Matt's call)
 
@@ -233,5 +351,8 @@ running plan.
   9-task plan where tasks 2-4 share a file and task 6 needs design judgment.
   RED: today's skill dispatches 9 implementers. GREEN: groups {2,3,4}, task 6
   alone, per-task completion lines, overlap ruling ledgered where files are
-  disjoint.
+  disjoint, a light review on a transcription group, a fix round that resumes
+  the reviewer. Phase 2 gets its own scenario on the same plan: no
+  implementer dispatches, one reviewer per group, the session continuing on
+  the next disjoint group while a review runs.
 - Whether `tests/sdd-helper-paths` needs a case.
